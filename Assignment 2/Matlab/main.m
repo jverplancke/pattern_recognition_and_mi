@@ -36,7 +36,7 @@ periods = [1 2 4 8];
 figure
 for i = 1:length(periods)
     subplot(2, 2, i)
-    [errors, ms, n_samples] = sweep(periods(i), ds/2, phase, lambda, pdf);
+    [errors, ms, n_samples] = sweep(periods(i), ds, phase, lambda, pdf);
     make_plot(errors, ms, n_samples, "Periods = " + periods(i))
 end
 allAxesInFigure = findall(gcf,'type','axes');
@@ -58,10 +58,13 @@ drawnow()
 % Noise variance
 variances = [0.1 0.25 0.4 0.9];
 figure
+% it also stands to reason that higher variance will lead to a bigger RMS
+% error, perhaps scale the RMS error by 1/sqrt(variance)? Need to work this
+% out properly
 for i = 1:length(variances)
-    pdf = @() gaussian(0, variances(i));
+    pdf_i = @() gaussian(0, variances(i));
     subplot(2, 2, i)
-    [errors, ms, n_samples] = sweep(P, ds, phase, lambda, pdf);
+    [errors, ms, n_samples] = sweep(P, ds, phase, lambda, pdf_i);
     make_plot(errors, ms, n_samples, "Variance = " + variances(i))
 end
 allAxesInFigure = findall(gcf,'type','axes');
@@ -70,9 +73,9 @@ drawnow()
 
 % Noise distribution
 noise_distribs = {
-    @() gaussian(0, 0.5)
-    @() uniform(0, 0.5)
-    @() exponential(0, 0.5)};
+    @() gaussian(0, 0.1)
+    @() uniform(0, 0.1)
+    @() exponential(0, 0.1)};
 noise_labels = ["Gaussian", "Uniform", "Exponential"];
 figure
 for i = 1:length(noise_distribs)
@@ -86,5 +89,3 @@ subplot(2, 2, 4)
 make_plot(errors, ms, n_samples, "Shot (Poisson)")
 allAxesInFigure = findall(gcf,'type','axes');
 linkaxes(allAxesInFigure)
-
-
