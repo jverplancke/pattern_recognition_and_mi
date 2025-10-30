@@ -1,0 +1,75 @@
+\documentclass{article}
+\usepackage[]{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+\section{Effect of regularisation}
+	For the unregularised case, we have that
+	\begin{equation}
+		\begin{aligned}
+			\frac{\partial E}{\partial w_i} = \sum_{n=1}^{N}
+			\left[
+				\sum_{j=0}^{M}w_jx^j_n-t_n
+			\right]x^i_n &= 0\\
+			\sum_{n=1}^{N}
+				\left[
+				\sum_{j=0}^{M}w_jx^{i+j}_n
+				\right] &= \sum_{n=1}^{N}t_nx^i_n\\
+			\sum_{j=0}^{M}
+				\left[w_j
+				\sum_{n=1}^{N}x^{i+j}_n
+				\right] &= \sum_{n=1}^{N}t_nx^i_n\\
+			\sum_{j=0}^{M}
+				w_j A_{ij} &= T_i
+		\end{aligned}
+	\end{equation}\\
+
+With regularisation, we get
+
+	\begin{equation}
+	\begin{aligned}
+		\frac{\partial E}{\partial w_i} = 
+		\sum_{n=1}^{N}
+			\left[
+			\sum_{j=0}^{M}w_jx^j_n-t_n
+			\right]x^i_n + \lambda w_i &= 0\\
+		\sum_{n=1}^{N}
+			\left[
+			\sum_{j=0}^{M}w_j(x^{i+j}_n+\delta_{ij}w_j)
+			\right] &= \sum_{n=1}^{N}t_nx^i_n\\
+		\sum_{j=0}^{M}
+			\left[w_j
+			\sum_{n=1}^{N}x^{i+j}_n + \delta_{ij}
+			\right] &= \sum_{n=1}^{N}t_nx^i_n\\
+		\sum_{j=0}^{M}
+			w_j (A_{ij} + \lambda I) &= T_i
+	\end{aligned}
+\end{equation}
+
+This also shows that $A$ being singular is solved by this form of regularisation, since it adds a constant along the diagonal thus making $A$ invertible. It is not impossible either that this operation would \textit{result} in a singular matrix, in that case, choosing a slightly different value of $\lambda$ solves this.\\
+
+$A$ being singular implies that $\exists c_0, ... c_M \in \mathbb{R}^M $ such that:
+\begin{equation}
+	\begin{aligned}
+		&c_0 A_{1,j} + c_1 A_{2,j} + ... + c_M A_{M+1,j} = 0\\
+		\Leftrightarrow
+		&c_0 \left[\sum_{n=1}^{N}x_n^{0}, \sum_{n=1}^{N}x_n^{1}, ..., \sum_{n=1}^{N}x_n^{M}\right]\\
+		+ &c_1 \left[\sum_{n=1}^{N}x_n^{1}, \sum_{n=1}^{N}x_n^{2}, ..., \sum_{n=1}^{N}x_n^{M+1}\right]\\
+		+ &...\\
+		+ &c_M \left[\sum_{n=1}^{N}x_n^{M}, \sum_{n=1}^{N}x_n^{M+1}, ..., \sum_{n=1}^{N}x_n^{2M}\right] = 0\\
+		\Leftrightarrow
+		& \left[\sum_{n=1}^{N}\sum_{j=0}^{M}c_jx_n^j, \sum_{n=1}^{N}\sum_{j=0}^{M}c_jx_n^{j+1}, ..., \sum_{n=1}^{N}\sum_{j=0}^{M}c_jx_n^{j+M}\right] = 0\\
+	\end{aligned}
+\end{equation}
+If the (squared) magnitude of this vector is zero, $A$ is singular:
+\begin{equation}
+	\sum_{l=0}^{M}\left(\sum_{n=1}^{N}\sum_{j=0}^{M}c_jx_n^{j+l}\right)^2 = 0
+\end{equation}
+Meaning each element must be zero:
+\begin{equation}
+	\sum_{n=1}^{N}\sum_{j=0}^{M}c_jx_n^{j} = ... = \sum_{n=1}^{N}\sum_{j=0}^{M}c_jx_n^{j+M} = 0
+\end{equation}
+For any n, this represents a linear equation with $M+1$ unknowns $c_j$. The system is underdetermined if $N \leq M$. Working back to our original assumption, this shows that $A$ is singular if there are more degrees of freedom in the fit than there are data points. In addition, if any of the $x_n$ are duplicate, this results in a duplicate row in the system of equations (thus rendering $A$ singular again). In other words, \textit{A is singular if there are more degrees of freedom in the fit than there are independent data points}.\\
+
+What if $x_n = 0$?
+\end{document}
