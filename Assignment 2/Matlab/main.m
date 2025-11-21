@@ -76,7 +76,7 @@ noise_distribs = {
     @() gaussian(0, 0.1)
     @() uniform(0, 0.1)
     @() exponential(0, 0.1)};
-noise_labels = ["Gaussian", "Uniform", "Exponential"];
+noise_labels = ["Gaussian", "Uniform", "Exponential (Laplace)"];
 figure
 for i = 1:length(noise_distribs)
     pdf_i = noise_distribs{i};
