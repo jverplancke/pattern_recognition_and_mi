@@ -32,6 +32,15 @@ class DAG(Digraph):
 			else:
 				warn(f"Node {head} or {tail} not in node list, edge not added")
 
+	def recalculate_edges(self):
+		for head, tail in self.edges:
+			if head in self.nodes and tail in self.nodes:
+				self.edge(head, tail)
+				self._nodes[head].add_child(tail)
+				self._nodes[tail].add_parent(head)
+			else:
+				warn(f"Node {head} or {tail} not in node list, edge not added")
+
 	def set_conditionals(self, nodes: list['Node']):
 		self.conditional_set = set(nodes)
 
@@ -69,7 +78,7 @@ class DAG(Digraph):
 
 	def node_by_name(self, name):
 		if isinstance(name, str):
-			return self._nodes[name]
+			return self._nodes.get(name)
 		else:
 			return name
 

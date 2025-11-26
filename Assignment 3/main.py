@@ -1,11 +1,31 @@
 import digraph
 
+def test_hypotheses(graph, hypothesis_list):
+	for nodes1, nodes2, conditionals in hypothesis_list:
+		conditionals = set(conditionals)
+
+		if conditionals.issubset(set(nodes)):
+			overall_independence = True
+			for node1 in nodes1:
+				for node2 in nodes2:
+					if node1 == node2:
+						continue
+					indep, paths = graph.conditionally_independent(node1, node2, conditionals) #, verbose=True)
+					if not indep:
+						overall_independence = False
+			print(f"{nodes1} and {nodes2} are{"" if overall_independence else " not"} independent conditioned on {conditionals}.")
+		else:
+			print("Some conditionals are not part of the graph.")
+
+	return indep, paths
+
 if __name__ == '__main__':
 	drivers = [f"A{i}" for i in range(1, 4)]
 	context = [f"C{i}" for i in range(1, 4)]
 	mediators = [f"M{i}" for i in range(1, 3)]
 	intermediates = [f"B{i}" for i in range(1, 4)]
 	outcome =["Y"]
+	#outcome = []
 
 	nodes = drivers + context + mediators + intermediates + outcome
 	edges = [
@@ -30,14 +50,27 @@ if __name__ == '__main__':
 		["B3", "Y"],
 	]
 
-	graph = digraph.DAG(nodes, edges)
-	all_paths = graph.find_all_paths("A1", "A2")
-	paths = [[n.name for n in p.path] for p in all_paths]
-	print(f"{"Y"} is a {graph.node_type("B1", "Y", "C1")}")
-	print(graph.get_descendants("C1"))
-	indep, paths = graph.conditionally_independent("A2", "A3", verbose=True)
-	indep, paths2 = graph.conditionally_independent("A2", "A3", "B2", verbose=True)
-	indep, paths2 = graph.conditionally_independent("A2", "A3", ["B2", "M2"], verbose=True)
+	conditionals = set([])
 
-	#print(graph.source)
-	#graph.render(view=True)
+	test = [
+		[["A1"], ["A2"], []],
+		[["A1"], ["A2"], ["B1"]],
+		[["A2"], ["A3"], []],
+		[["A2"], ["A3"], ["B2"]],
+		[["A2"], ["A3"], ["B2", "M2"]],
+		[["A1"], ["M1"], []],
+		[["A1"], ["M1"], ["B3"]],
+		[["B1", "B2", "B3", "M1", "C1"], ["B1", "B2", "B3", "M1", "C1"], []],
+		[["B1", "B2", "B3", "M1", "C1"], ["B1", "B2", "B3", "M1", "C1"], ["Y"]],
+		[["B1"], ["Y"], []],
+		[["B1"], ["Y"], ["M2", "B2"]],
+		[["M2"], ["Y"], []],
+		[["M2"], ["Y"], ["B2"]],
+		[["C3"], ["Y"], []],
+		[["C3"], ["Y"], ["M1"]],
+	]
+
+	graph = digraph.DAG(nodes, edges)
+	indep, (open_paths, closed_paths) = test_hypotheses(graph, test)
+
+	#graph.view()
