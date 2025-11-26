@@ -73,4 +73,4 @@ if __name__ == '__main__':
 	graph = digraph.DAG(nodes, edges)
 	indep, (open_paths, closed_paths) = test_hypotheses(graph, test)
 
-	#graph.view()
+	graph.view()
