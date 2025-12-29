@@ -1,0 +1,33 @@
+digraph {
+	A1 [label=A1]
+	A2 [label=A2]
+	A3 [label=A3]
+	C1 [label=C1]
+	C2 [label=C2]
+	C3 [label=C3]
+	M1 [label=M1]
+	M2 [label=M2]
+	B1 [label=B1]
+	B2 [label=B2]
+	B3 [label=B3]
+	Y [label=Y]
+	C1 -> A1
+	C1 -> B2
+	C1 -> Y
+	C2 -> A2
+	C2 -> B1
+	C3 -> A3
+	C3 -> M1
+	A1 -> B1
+	A1 -> B3
+	A2 -> B1
+	A2 -> B2
+	A3 -> B2
+	B1 -> M2
+	M2 -> B2
+	M1 -> B3
+	M1 -> Y
+	B1 -> Y
+	B2 -> Y
+	B3 -> Y
+}
